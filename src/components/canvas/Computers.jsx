@@ -1,7 +1,7 @@
 import { useEffect, useState, Suspense } from "react";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
+import { OrbitControls, Preload, useGLTF, SpotLight } from "@react-three/drei";
 
 import CanvasLoader from "../Loader";
 
@@ -10,28 +10,34 @@ const Computers = ({ isMobile }) => {
 
   return (
     <mesh>
-    <hemisphereLight intensity={0.15} groundColor='black' />
-    <spotLight
-      position={[-20, 50, 10]}
-      angle={0.12}
-      penumbra={1}
-      intensity={1}
-      castShadow
-      shadow-mapSize={1024}
-    />
-    <pointLight intensity={10} />
-    <primitive
-      object={computer.scene}
-      scale={isMobile ? 0.7 : 0.75}
-      position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
+      <hemisphereLight intensity={0.15} groundColor="black" />
+      <SpotLight
+        position={[0, 3, 0]}
+        distance={8}
+        angle={1.5}
+        attenuation={8}
+        anglePower={1.8} // Diffuse-cone anglePower (default: 5)
+      />
+      {/* <spotLight
+        position={[-20, 50, 10]}
+        angle={0.12}
+        penumbra={1}
+        intensity={1}
+        castShadow
+        shadow-mapSize={1024}
+      /> */}
+      <pointLight intensity={5} />
+      <primitive
+        object={computer.scene}
+        scale={isMobile ? 0.7 : 0.75}
+        position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
-    />
-  </mesh>
+      />
+    </mesh>
   );
 };
 
 const ComputersCanvas = () => {
-
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -55,10 +61,9 @@ const ComputersCanvas = () => {
     };
   }, []);
 
-
   return (
     <Canvas
-      frameloop='demand'
+      frameloop="demand"
       shadows
       dpr={[1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
